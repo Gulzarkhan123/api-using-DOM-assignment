@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Single Page Website</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(45deg, #3498db, #e74c3c, #2ecc71, #f39c12);
+      background-size: 400% 400%;
+      animation: gradientAnimation 15s ease infinite;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    @keyframes gradientAnimation {
+      0% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    .card {
+      border: none;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+      background-color: rgba(255, 255, 255, 0.9);
+      transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    }
+
+    .card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .card img {
+      border-radius: 15px 15px 0 0;
+    }
+
+    .card-body {
+      padding: 20px;
+    }
+
+    .btn-primary {
+      background-color: #3498db;
+      border-color: #3498db;
+    }
+
+    .btn-primary:hover {
+      background-color: #2980b9;
+      border-color: #2980b9;
+    }
+    h1 {
+      color: #fff;
+      font-size: 2.5em;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
+    .container {
+      overflow-y: auto; /* Make the container scrollable */
+      max-height: 80vh; /* Set a maximum height for the container */
+    }
+  </style>
+</head>
+<body>
+
+<div class="container mt-5">
+  <div class="text-center">
+    <h1>Welcome to My Single Page Website</h1>
+    <button class="btn btn-primary mt-3" onclick="fetchUserData()">Load Random Users</button>
+  </div>
+
+  <div class="row mt-4" id="userList"></div>
+</div>
+
+<script>
+  async function fetchUserData() {
+    const numberOfUsers = 10;
+    const userContainer = document.getElementById('userList');
+    userContainer.innerHTML = '';
+
+    try {
+      for (let i = 0; i < numberOfUsers; i++) {
+        const response = await fetch('https://randomuser.me/api/');
+        const userData = await response.json();
+        const user = userData.results[0];
+
+        displayUser(user);
+      }
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+    }
+  }
+
+  function displayUser(user) {
+    const userContainer = document.getElementById('userList');
+    const userCard = document.createElement('div');
+    userCard.className = 'col-md-4 mb-4';
+
+    userCard.innerHTML = `
+      <div class="card" style="width: 18rem;">
+        <img src="${user.picture.medium}" class="card-img-top" alt="User Image">
+        <div class="card-body">
+          <h5 class="card-title">${user.name.first} ${user.name.last}</h5>
+          <p class="card-text">Email: ${user.email}</p>
+          <p class="card-text">Location: ${user.location.city}, ${user.location.country}</p>
+          <a href="#" class="btn btn-primary">Add Friend+</a>
+        </div>
+      </div>
+    `;
+
+    userContainer.appendChild(userCard);
+  }
+</script>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+</body>
+</html>
